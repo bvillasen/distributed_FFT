@@ -1,0 +1,352 @@
+configure: ****************************************************************
+configure: *      Configuring in common/pfft                              *
+configure: ****************************************************************
+checking build system type... x86_64-pc-linux-gnu
+checking host system type... x86_64-pc-linux-gnu
+checking for a BSD-compatible install... /usr/bin/install -c
+checking whether build environment is sane... yes
+checking for a thread-safe mkdir -p... /bin/mkdir -p
+checking for gawk... no
+checking for mawk... mawk
+checking whether make sets $(MAKE)... yes
+checking whether make supports nested variables... yes
+checking for style of include used by make... GNU
+checking for gcc... gcc
+checking whether the C compiler works... yes
+checking for C compiler default output file name... a.out
+checking for suffix of executables... 
+checking whether we are cross compiling... no
+checking for suffix of object files... o
+checking whether we are using the GNU C compiler... yes
+checking whether gcc accepts -g... yes
+checking for gcc option to accept ISO C89... none needed
+checking whether gcc understands -c and -o together... yes
+checking dependency style of gcc... gcc3
+checking for function MPI_Init... no
+checking for function MPI_Init in -lmpi... yes
+checking for mpi.h... yes
+checking for gcc option to accept ISO C99... none needed
+checking for inline... inline
+checking whether we are using the GNU Fortran compiler... yes
+checking whether f95 accepts -g... yes
+checking for function MPI_INIT... no
+checking for function MPI_INIT in -lmpichf90... no
+checking for function MPI_INIT in -lfmpi... no
+checking for function MPI_INIT in -lfmpich... no
+configure: WARNING: *** Could not find MPI Fortran compiler; using default Fortran wrappers.
+checking how to print strings... printf
+checking for a sed that does not truncate output... /bin/sed
+checking for grep that handles long lines and -e... /bin/grep
+checking for egrep... /bin/grep -E
+checking for fgrep... /bin/grep -F
+checking for ld used by gcc... /usr/bin/ld
+checking if the linker (/usr/bin/ld) is GNU ld... yes
+checking for BSD- or MS-compatible name lister (nm)... /usr/bin/nm -B
+checking the name lister (/usr/bin/nm -B) interface... BSD nm
+checking whether ln -s works... yes
+checking the maximum length of command line arguments... 1572864
+checking how to convert x86_64-pc-linux-gnu file names to x86_64-pc-linux-gnu format... func_convert_file_noop
+checking how to convert x86_64-pc-linux-gnu file names to toolchain format... func_convert_file_noop
+checking for /usr/bin/ld option to reload object files... -r
+checking for objdump... objdump
+checking how to recognize dependent libraries... pass_all
+checking for dlltool... no
+checking how to associate runtime and link libraries... printf %s\n
+checking for ar... ar
+checking for archiver @FILE support... @
+checking for strip... strip
+checking for ranlib... ranlib
+checking command to parse /usr/bin/nm -B output from gcc object... ok
+checking for sysroot... no
+checking for a working dd... /bin/dd
+checking how to truncate binary pipes... /bin/dd bs=4096 count=1
+checking for mt... mt
+checking if mt is a manifest tool... no
+checking how to run the C preprocessor... gcc -E
+checking for ANSI C header files... yes
+checking for sys/types.h... yes
+checking for sys/stat.h... yes
+checking for stdlib.h... yes
+checking for string.h... yes
+checking for memory.h... yes
+checking for strings.h... yes
+checking for inttypes.h... yes
+checking for stdint.h... yes
+checking for unistd.h... yes
+checking for dlfcn.h... yes
+checking for objdir... .libs
+checking if gcc supports -fno-rtti -fno-exceptions... no
+checking for gcc option to produce PIC... -fPIC -DPIC
+checking if gcc PIC flag -fPIC -DPIC works... yes
+checking if gcc static flag -static works... no
+checking if gcc supports -c -o file.o... yes
+checking if gcc supports -c -o file.o... (cached) yes
+checking whether the gcc linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking dynamic linker characteristics... GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking whether stripping libraries is possible... yes
+checking if libtool supports shared libraries... yes
+checking whether to build shared libraries... no
+checking whether to build static libraries... yes
+checking if libtool supports shared libraries... yes
+checking whether to build shared libraries... no
+checking whether to build static libraries... yes
+checking for f95 option to produce PIC... -fPIC
+checking if f95 PIC flag -fPIC works... yes
+checking if f95 static flag -static works... no
+checking if f95 supports -c -o file.o... yes
+checking if f95 supports -c -o file.o... (cached) yes
+checking whether the f95 linker (/usr/bin/ld -m elf_x86_64) supports shared libraries... yes
+checking dynamic linker characteristics... (cached) GNU/Linux ld.so
+checking how to hardcode library paths into programs... immediate
+checking for sincos in -lm... yes
+checking fftw3.h usability... yes
+checking fftw3.h presence... yes
+checking for fftw3.h... yes
+checking fftw3-mpi.h usability... yes
+checking fftw3-mpi.h presence... yes
+checking for fftw3-mpi.h... yes
+checking for fftw_execute in -lfftw3... yes
+checking for fftw_mpi_init in -lfftw3_mpi... yes
+checking for C compiler vendor... gnu
+checking whether C compiler accepts -malign-double... yes
+checking whether C compiler accepts -fstrict-aliasing... yes
+checking whether C compiler accepts -ffast-math... yes
+checking for gcc architecture flag... 
+checking for x86 cpuid 0 output... unknown
+checking for x86 cpuid 1 output... unknown
+checking whether C compiler accepts -march=native... yes
+checking for gcc architecture flag... -march=native
+checking whether C compiler accepts -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native... yes
+checking for ptrdiff_t... yes
+checking for long double... yes
+checking size of ptrdiff_t... 8
+checking size of MPI_Fint... 4
+checking for library containing log... none required
+checking for pdflatex... /usr/bin/pdflatex
+checking for makeindex... /usr/bin/makeindex
+checking for bibtex... /usr/bin/bibtex
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating doc/latexinc.sh
+config.status: creating Makefile
+config.status: creating pfft.pc
+config.status: creating api/pfft.f
+config.status: creating api/pfft.f03
+config.status: creating api/pfftl.f03
+config.status: creating kernel/Makefile
+config.status: creating util/Makefile
+config.status: creating api/Makefile
+config.status: creating gcell/Makefile
+config.status: creating tests/Makefile
+config.status: creating tests/fortran/Makefile
+config.status: creating tests/f03/Makefile
+config.status: creating tests/openmp/Makefile
+config.status: creating doc/Makefile
+config.status: creating config.h
+config.status: creating fconfig.h
+config.status: executing depfiles commands
+config.status: executing libtool commands
+make  all-recursive
+make[1]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft'
+Making all in kernel
+make[2]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/kernel'
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT block.lo -MD -MP -MF .deps/block.Tpo -c -o block.lo block.c
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT check.lo -MD -MP -MF .deps/check.Tpo -c -o check.lo check.c
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT malloc.lo -MD -MP -MF .deps/malloc.Tpo -c -o malloc.lo malloc.c
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT ousample.lo -MD -MP -MF .deps/ousample.Tpo -c -o ousample.lo ousample.c
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT ousample.lo -MD -MP -MF .deps/ousample.Tpo -c ousample.c -o ousample.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT malloc.lo -MD -MP -MF .deps/malloc.Tpo -c malloc.c -o malloc.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT check.lo -MD -MP -MF .deps/check.Tpo -c check.c -o check.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT block.lo -MD -MP -MF .deps/block.Tpo -c block.c -o block.o
+mv -f .deps/check.Tpo .deps/check.Plo
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT outrafo.lo -MD -MP -MF .deps/outrafo.Tpo -c -o outrafo.lo outrafo.c
+mv -f .deps/malloc.Tpo .deps/malloc.Plo
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT partrafo-transposed.lo -MD -MP -MF .deps/partrafo-transposed.Tpo -c -o partrafo-transposed.lo partrafo-transposed.c
+mv -f .deps/block.Tpo .deps/block.Plo
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT partrafo.lo -MD -MP -MF .deps/partrafo.Tpo -c -o partrafo.lo partrafo.c
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT outrafo.lo -MD -MP -MF .deps/outrafo.Tpo -c outrafo.c -o outrafo.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT partrafo-transposed.lo -MD -MP -MF .deps/partrafo-transposed.Tpo -c partrafo-transposed.c -o partrafo-transposed.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT partrafo.lo -MD -MP -MF .deps/partrafo.Tpo -c partrafo.c -o partrafo.o
+mv -f .deps/outrafo.Tpo .deps/outrafo.Plo
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT sertrafo.lo -MD -MP -MF .deps/sertrafo.Tpo -c -o sertrafo.lo sertrafo.c
+mv -f .deps/ousample.Tpo .deps/ousample.Plo
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT procmesh.lo -MD -MP -MF .deps/procmesh.Tpo -c -o procmesh.lo procmesh.c
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT sertrafo.lo -MD -MP -MF .deps/sertrafo.Tpo -c sertrafo.c -o sertrafo.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT procmesh.lo -MD -MP -MF .deps/procmesh.Tpo -c procmesh.c -o procmesh.o
+mv -f .deps/partrafo-transposed.Tpo .deps/partrafo-transposed.Plo
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT remap_3dto2d.lo -MD -MP -MF .deps/remap_3dto2d.Tpo -c -o remap_3dto2d.lo remap_3dto2d.c
+mv -f .deps/procmesh.Tpo .deps/procmesh.Plo
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT timer.lo -MD -MP -MF .deps/timer.Tpo -c -o timer.lo timer.c
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT remap_3dto2d.lo -MD -MP -MF .deps/remap_3dto2d.Tpo -c remap_3dto2d.c -o remap_3dto2d.o
+mv -f .deps/sertrafo.Tpo .deps/sertrafo.Plo
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT transpose.lo -MD -MP -MF .deps/transpose.Tpo -c -o transpose.lo transpose.c
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT timer.lo -MD -MP -MF .deps/timer.Tpo -c timer.c -o timer.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT transpose.lo -MD -MP -MF .deps/transpose.Tpo -c transpose.c -o transpose.o
+mv -f .deps/remap_3dto2d.Tpo .deps/remap_3dto2d.Plo
+mv -f .deps/transpose.Tpo .deps/transpose.Plo
+mv -f .deps/timer.Tpo .deps/timer.Plo
+mv -f .deps/partrafo.Tpo .deps/partrafo.Plo
+/bin/bash ../libtool  --tag=CC   --mode=link gcc  -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native   -L/home/bruno/apps/fftw-3.3.5/lib -L/usr/lib/openmpi/lib  -o libkernel.la  block.lo check.lo malloc.lo ousample.lo outrafo.lo partrafo-transposed.lo partrafo.lo sertrafo.lo procmesh.lo remap_3dto2d.lo timer.lo transpose.lo  -lm -lmpi 
+libtool: link: ar cru .libs/libkernel.a  block.o check.o malloc.o ousample.o outrafo.o partrafo-transposed.o partrafo.o sertrafo.o procmesh.o remap_3dto2d.o timer.o transpose.o
+ar: `u' modifier ignored since `D' is the default (see `U')
+libtool: link: ranlib .libs/libkernel.a
+libtool: link: ( cd ".libs" && rm -f "libkernel.la" && ln -s "../libkernel.la" "libkernel.la" )
+make[2]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/kernel'
+Making all in gcell
+make[2]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/gcell'
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT gcells_plan.lo -MD -MP -MF .deps/gcells_plan.Tpo -c -o gcells_plan.lo gcells_plan.c
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT gcells_RMA.lo -MD -MP -MF .deps/gcells_RMA.Tpo -c -o gcells_RMA.lo gcells_RMA.c
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT gcells_sendrecv.lo -MD -MP -MF .deps/gcells_sendrecv.Tpo -c -o gcells_sendrecv.lo gcells_sendrecv.c
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT gctimer.lo -MD -MP -MF .deps/gctimer.Tpo -c -o gctimer.lo gctimer.c
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT gcells_RMA.lo -MD -MP -MF .deps/gcells_RMA.Tpo -c gcells_RMA.c -o gcells_RMA.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT gcells_sendrecv.lo -MD -MP -MF .deps/gcells_sendrecv.Tpo -c gcells_sendrecv.c -o gcells_sendrecv.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT gctimer.lo -MD -MP -MF .deps/gctimer.Tpo -c gctimer.c -o gctimer.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../api -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT gcells_plan.lo -MD -MP -MF .deps/gcells_plan.Tpo -c gcells_plan.c -o gcells_plan.o
+mv -f .deps/gctimer.Tpo .deps/gctimer.Plo
+mv -f .deps/gcells_sendrecv.Tpo .deps/gcells_sendrecv.Plo
+mv -f .deps/gcells_RMA.Tpo .deps/gcells_RMA.Plo
+mv -f .deps/gcells_plan.Tpo .deps/gcells_plan.Plo
+/bin/bash ../libtool  --tag=CC   --mode=link gcc  -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native   -L/home/bruno/apps/fftw-3.3.5/lib -L/usr/lib/openmpi/lib  -o libgcell.la  gcells_plan.lo gcells_RMA.lo gcells_sendrecv.lo gctimer.lo  -lm -lmpi 
+libtool: link: ar cru .libs/libgcell.a  gcells_plan.o gcells_RMA.o gcells_sendrecv.o gctimer.o
+ar: `u' modifier ignored since `D' is the default (see `U')
+libtool: link: ranlib .libs/libgcell.a
+libtool: link: ( cd ".libs" && rm -f "libgcell.la" && ln -s "../libgcell.la" "libgcell.la" )
+make[2]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/gcell'
+Making all in util
+make[2]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/util'
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../api -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT util.lo -MD -MP -MF .deps/util.Tpo -c -o util.lo util.c
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../api -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT getargs.lo -MD -MP -MF .deps/getargs.Tpo -c -o getargs.lo getargs.c
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../api -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT util.lo -MD -MP -MF .deps/util.Tpo -c util.c -o util.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../api -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT getargs.lo -MD -MP -MF .deps/getargs.Tpo -c getargs.c -o getargs.o
+mv -f .deps/getargs.Tpo .deps/getargs.Plo
+mv -f .deps/util.Tpo .deps/util.Plo
+/bin/bash ../libtool  --tag=CC   --mode=link gcc  -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native   -L/home/bruno/apps/fftw-3.3.5/lib -L/usr/lib/openmpi/lib  -o libutil.la  util.lo getargs.lo  -lm -lmpi 
+libtool: link: ar cru .libs/libutil.a  util.o getargs.o
+ar: `u' modifier ignored since `D' is the default (see `U')
+libtool: link: ranlib .libs/libutil.a
+libtool: link: ( cd ".libs" && rm -f "libutil.la" && ln -s "../libutil.la" "libutil.la" )
+make[2]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/util'
+Making all in api
+make[2]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/api'
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../util  -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT api-basic.lo -MD -MP -MF .deps/api-basic.Tpo -c -o api-basic.lo api-basic.c
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../util  -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT api-adv.lo -MD -MP -MF .deps/api-adv.Tpo -c -o api-adv.lo api-adv.c
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../util  -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT fortran-api.lo -MD -MP -MF .deps/fortran-api.Tpo -c -o fortran-api.lo fortran-api.c
+/bin/bash ../libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I. -I..  -I../kernel -I../util  -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include   -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -MT f03-wrap.lo -MD -MP -MF .deps/f03-wrap.Tpo -c -o f03-wrap.lo f03-wrap.c
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT api-basic.lo -MD -MP -MF .deps/api-basic.Tpo -c api-basic.c -o api-basic.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT f03-wrap.lo -MD -MP -MF .deps/f03-wrap.Tpo -c f03-wrap.c -o f03-wrap.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT fortran-api.lo -MD -MP -MF .deps/fortran-api.Tpo -c fortran-api.c -o fortran-api.o
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -I.. -I../kernel -I../util -I/home/bruno/apps/fftw-3.3.5/include -I/usr/lib/openmpi/include -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native -MT api-adv.lo -MD -MP -MF .deps/api-adv.Tpo -c api-adv.c -o api-adv.o
+mv -f .deps/api-adv.Tpo .deps/api-adv.Plo
+mv -f .deps/f03-wrap.Tpo .deps/f03-wrap.Plo
+mv -f .deps/api-basic.Tpo .deps/api-basic.Plo
+mv -f .deps/fortran-api.Tpo .deps/fortran-api.Plo
+/bin/bash ../libtool  --tag=CC   --mode=link gcc  -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native   -L/home/bruno/apps/fftw-3.3.5/lib -L/usr/lib/openmpi/lib  -o libapi.la  api-basic.lo api-adv.lo fortran-api.lo f03-wrap.lo  -lm -lmpi 
+libtool: link: ar cru .libs/libapi.a  api-basic.o api-adv.o fortran-api.o f03-wrap.o
+ar: `u' modifier ignored since `D' is the default (see `U')
+libtool: link: ranlib .libs/libapi.a
+libtool: link: ( cd ".libs" && rm -f "libapi.la" && ln -s "../libapi.la" "libapi.la" )
+make[2]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/api'
+Making all in .
+make[2]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft'
+/bin/bash ./libtool  --tag=CC   --mode=link gcc  -O3 -fomit-frame-pointer -malign-double -fstrict-aliasing -ffast-math -march=native  -no-undefined -version-info 0:0:0 -L/home/bruno/apps/fftw-3.3.5/lib -L/usr/lib/openmpi/lib  -o libpfft.la -rpath /home/bruno/apps//pfft-git/lib  kernel/libkernel.la util/libutil.la api/libapi.la gcell/libgcell.la -lm -lmpi 
+libtool: link: (cd .libs/libpfft.lax/libkernel.a && ar x "/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/kernel/.libs/libkernel.a")
+libtool: link: (cd .libs/libpfft.lax/libutil.a && ar x "/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/util/.libs/libutil.a")
+libtool: link: (cd .libs/libpfft.lax/libapi.a && ar x "/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/api/.libs/libapi.a")
+libtool: link: (cd .libs/libpfft.lax/libgcell.a && ar x "/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/gcell/.libs/libgcell.a")
+libtool: link: ar cru .libs/libpfft.a   .libs/libpfft.lax/libkernel.a/block.o .libs/libpfft.lax/libkernel.a/check.o .libs/libpfft.lax/libkernel.a/malloc.o .libs/libpfft.lax/libkernel.a/ousample.o .libs/libpfft.lax/libkernel.a/outrafo.o .libs/libpfft.lax/libkernel.a/partrafo-transposed.o .libs/libpfft.lax/libkernel.a/partrafo.o .libs/libpfft.lax/libkernel.a/procmesh.o .libs/libpfft.lax/libkernel.a/remap_3dto2d.o .libs/libpfft.lax/libkernel.a/sertrafo.o .libs/libpfft.lax/libkernel.a/timer.o .libs/libpfft.lax/libkernel.a/transpose.o  .libs/libpfft.lax/libutil.a/getargs.o .libs/libpfft.lax/libutil.a/util.o  .libs/libpfft.lax/libapi.a/api-adv.o .libs/libpfft.lax/libapi.a/api-basic.o .libs/libpfft.lax/libapi.a/f03-wrap.o .libs/libpfft.lax/libapi.a/fortran-api.o  .libs/libpfft.lax/libgcell.a/gcells_RMA.o .libs/libpfft.lax/libgcell.a/gcells_plan.o .libs/libpfft.lax/libgcell.a/gcells_sendrecv.o .libs/libpfft.lax/libgcell.a/gctimer.o 
+ar: `u' modifier ignored since `D' is the default (see `U')
+libtool: link: ranlib .libs/libpfft.a
+libtool: link: rm -fr .libs/libpfft.lax
+libtool: link: ( cd ".libs" && rm -f "libpfft.la" && ln -s "../libpfft.la" "libpfft.la" )
+make[2]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft'
+Making all in tests
+make[2]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/tests'
+make[3]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/tests'
+make[3]: Nothing to be done for 'all-am'.
+make[3]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/tests'
+make[2]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/tests'
+Making all in doc
+make[2]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/doc'
+make[2]: Nothing to be done for 'all'.
+make[2]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/doc'
+make[1]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft'
+Making install in kernel
+make[1]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/kernel'
+make[2]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/kernel'
+make[2]: Nothing to be done for 'install-exec-am'.
+make[2]: Nothing to be done for 'install-data-am'.
+make[2]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/kernel'
+make[1]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/kernel'
+Making install in gcell
+make[1]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/gcell'
+make[2]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/gcell'
+make[2]: Nothing to be done for 'install-exec-am'.
+make[2]: Nothing to be done for 'install-data-am'.
+make[2]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/gcell'
+make[1]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/gcell'
+Making install in util
+make[1]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/util'
+make[2]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/util'
+make[2]: Nothing to be done for 'install-exec-am'.
+make[2]: Nothing to be done for 'install-data-am'.
+make[2]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/util'
+make[1]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/util'
+Making install in api
+make[1]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/api'
+make[2]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/api'
+make[2]: Nothing to be done for 'install-exec-am'.
+ /bin/mkdir -p '/home/bruno/apps//pfft-git/include'
+ /usr/bin/install -c -m 644 pfft.h '/home/bruno/apps//pfft-git/include'
+ /bin/mkdir -p '/home/bruno/apps//pfft-git/include'
+ /usr/bin/install -c -m 644 pfft.f pfft.f03 pfftl.f03 '/home/bruno/apps//pfft-git/include'
+make[2]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/api'
+make[1]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/api'
+Making install in .
+make[1]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft'
+make[2]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft'
+ /bin/mkdir -p '/home/bruno/apps//pfft-git/lib'
+ /bin/bash ./libtool   --mode=install /usr/bin/install -c   libpfft.la '/home/bruno/apps//pfft-git/lib'
+libtool: install: /usr/bin/install -c .libs/libpfft.lai /home/bruno/apps//pfft-git/lib/libpfft.la
+libtool: install: /usr/bin/install -c .libs/libpfft.a /home/bruno/apps//pfft-git/lib/libpfft.a
+libtool: install: chmod 644 /home/bruno/apps//pfft-git/lib/libpfft.a
+libtool: install: ranlib /home/bruno/apps//pfft-git/lib/libpfft.a
+libtool: finish: PATH="/home/bruno/apps/julia:/home/bruno/pyEnvs/phyGPU/bin:/home/bruno/Desktop/Dropbox/Developer/myBin:/usr/local/cuda/bin:/home/bruno/bin:/home/bruno/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/sbin" ldconfig -n /home/bruno/apps//pfft-git/lib
+----------------------------------------------------------------------
+Libraries have been installed in:
+   /home/bruno/apps//pfft-git/lib
+
+If you ever happen to want to link against installed libraries
+in a given directory, LIBDIR, you must either use libtool, and
+specify the full pathname of the library, or use the '-LLIBDIR'
+flag during linking and do at least one of the following:
+   - add LIBDIR to the 'LD_LIBRARY_PATH' environment variable
+     during execution
+   - add LIBDIR to the 'LD_RUN_PATH' environment variable
+     during linking
+   - use the '-Wl,-rpath -Wl,LIBDIR' linker flag
+   - have your system administrator add LIBDIR to '/etc/ld.so.conf'
+
+See any operating system documentation about shared libraries for
+more information, such as the ld(1) and ld.so(8) manual pages.
+----------------------------------------------------------------------
+ /bin/mkdir -p '/home/bruno/apps//pfft-git/lib/pkgconfig'
+ /usr/bin/install -c -m 644 pfft.pc '/home/bruno/apps//pfft-git/lib/pkgconfig'
+make[2]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft'
+make[1]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft'
+Making install in tests
+make[1]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/tests'
+make[2]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/tests'
+make[3]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/tests'
+make[3]: Nothing to be done for 'install-exec-am'.
+make[3]: Nothing to be done for 'install-data-am'.
+make[3]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/tests'
+make[2]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/tests'
+make[1]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/tests'
+Making install in doc
+make[1]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/doc'
+make[2]: Entering directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/doc'
+make[2]: Nothing to be done for 'install-exec-am'.
+make[2]: Nothing to be done for 'install-data-am'.
+make[2]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/doc'
+make[1]: Leaving directory '/home/bruno/Desktop/Dropbox/Developer/distributed_FFT/tmp-pfft-git/pfft/doc'
