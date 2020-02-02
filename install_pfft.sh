@@ -8,6 +8,12 @@ FFTWDIR=/home/bruno/apps/fftw-3.3.5
 TMP="${PWD}/tmp-pfft-$PFFT_VERSION"
 LOGFILE="${TMP}/build.log"
 
+# #TORNADO
+# MPIDIR=/usr/lib/openmpi
+
+#HAWK
+MPIDIR=/usr/lib/x86_64-linux-gnu/openmpi
+
 bash check if directory exists
 if [ -d $TMP ]; then
         echo "Directory $TMP already exists. Delete it? (y/n)"
@@ -32,8 +38,8 @@ cd pfft
 ./bootstrap.sh
 # ./configure --prefix=$INSTDIR --disable-shared --enable-openmp \
 ./configure --prefix=$INSTDIR --disable-shared  \
-  CPPFLAGS="-I$FFTWDIR/include -I/usr/lib/openmpi/include" \
-  LDFLAGS="-L$FFTWDIR/lib -L/usr/lib/openmpi/lib" \
+  CPPFLAGS="-I$FFTWDIR/include -I$MPIDIR/include" \
+  LDFLAGS="-L$FFTWDIR/lib -L$MPIDIR/lib" \
   FC=f95 CC=gcc MPICC=mpiCC MPIFC=mpif90 2>&1 | tee $LOGFILE
 
 make -j 4 2>&1 | tee -a $LOGFILE

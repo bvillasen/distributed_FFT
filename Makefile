@@ -14,6 +14,12 @@ CPPOBJS   = $(subst .cpp,.o,$(CPPFILES))
 CC	= mpicc
 CXX   = mpicxx
 
+# HDF5 Location
+HDF5_INCL = -I/usr/include/hdf5/serial/
+HDF5_LIBS = -L/usr/lib/x86_64-linux-gnu/hdf5/serial/ -lhdf5
+
+INCL   = -I./ $(HDF5_INCL)
+LIBS   = -lm $(HDF5_LIBS) 
 
 # PFFT in Tornado
 FFTW_INCL = -I/home/bruno/apps/fftw-3.3.5/include

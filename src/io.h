@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
+#include <stdio.h>
 
 using namespace std;
 
-void Load_field_from_file( int n_snapshot, int n_box, string input_dir, string file_nama_base  );
+void Load_field_from_file( const string &file_name, const string &input_dir, int rank, int nprocs );

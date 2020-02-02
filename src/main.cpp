@@ -3,7 +3,10 @@
 #include <pfft.h>
 #include <complex.h>
 #include <string>
+#include <iostream> 
 #include "io.h"
+#include <sstream>
+
 
 
 using namespace std;
@@ -37,6 +40,14 @@ int main(int argc, char** argv) {
     printf("InputDir: %s\n",  input_dir.c_str() );
     printf("OutputDir: %s\n", output_dir.c_str() );
   }
+  
+  
+  int n_snapshot = 0;
+  ostringstream file_name;
+  file_name <<  "_particles.h5." << rank;
+  
+  
+  Load_field_from_file( file_name.str(), input_dir, rank, size   );
   
   
   
