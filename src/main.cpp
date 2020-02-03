@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
   // data_dir = "/home/bruno/Desktop/ssd_0/data/";
   // input_dir  = data_dir + "cosmo_sims/256_dm_50Mpc/output_files/";
   // output_dir = data_dir + "cosmo_sims/256_dm_50Mpc/output_files/data_fft/";
-  dataDir = "/gpfs/alpine/proj-shared/ast149/"
+  data_dir = "/gpfs/alpine/proj-shared/ast149/"
   input_dir  = data_dir + "cosmo_sims/2048_dm_50Mpc/output_files/";
   output_dir = data_dir + "cosmo_sims/2048_dm_50Mpc/power_spectrum_new/data_fft/";
   
