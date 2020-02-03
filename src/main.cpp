@@ -5,7 +5,8 @@
 #include <string>
 #include <iostream> 
 #include <sstream>
-#include<stdlib.h>
+#include <stdlib.h>
+#include <math.h>
 #include "global.h"
 #include "io.h"
 #include "mpi_functions.h"
@@ -35,9 +36,12 @@ int main(int argc, char** argv) {
   
   
   string data_dir, input_dir, output_dir;
-  data_dir = "/home/bruno/Desktop/ssd_0/data/";
-  input_dir  = data_dir + "cosmo_sims/256_dm_50Mpc/output_files/";
-  output_dir = data_dir + "cosmo_sims/256_dm_50Mpc/output_files/data_fft/";
+  // data_dir = "/home/bruno/Desktop/ssd_0/data/";
+  // input_dir  = data_dir + "cosmo_sims/256_dm_50Mpc/output_files/";
+  // output_dir = data_dir + "cosmo_sims/256_dm_50Mpc/output_files/data_fft/";
+  dataDir = "/gpfs/alpine/proj-shared/ast149/"
+  input_dir  = data_dir + "cosmo_sims/2048_dm_50Mpc/output_files/";
+  output_dir = data_dir + "cosmo_sims/2048_dm_50Mpc/power_spectrum_new/data_fft/";
   
   if ( rank == 0 ){
     printf("Distributed FFT \n" );
@@ -50,14 +54,19 @@ int main(int argc, char** argv) {
   int nx_total, ny_total, nz_total;
   int nx_local, ny_local, nz_local;
   int n_cells_local, n_cells_total;
+  Real Lx, Ly, Lz;
   
-  n_proc_x = 2;
-  n_proc_y = 2;
-  n_proc_z = 2;
+  Lx = 50000.0;
+  Ly = 50000.0;
+  Lz = 50000.0;
   
-  nx_total = 256;
-  ny_total = 256;
-  nz_total = 256;
+  n_proc_x = 8;
+  n_proc_y = 8;
+  n_proc_z = 8;
+  
+  nx_total = 2048;
+  ny_total = 2048;
+  nz_total = 2048;
   
   nx_local = nx_total / n_proc_x;
   ny_local = ny_total / n_proc_y;
@@ -87,6 +96,9 @@ int main(int argc, char** argv) {
   field_mean_local /= n_cells_local;
   field_mean_global = ReduceRealAvg( field_mean_local, size );
   if ( rank == 0 ) printf("Mean %s: %f\n", field_name.c_str(), field_mean_global );
+  
+  // Compute the overdensity
+  for ( int i=0; i<n_cells_local; i++ ) data_field[i] = data_field[i] / field_mean_global;
   
   
   
@@ -138,25 +150,25 @@ int main(int argc, char** argv) {
   in  = pfft_alloc_complex(alloc_local);
   out = pfft_alloc_complex(alloc_local);
   
+  bool compute_backward = false;
   
   /* Plan parallel forward FFT */
   if ( rank == 0 ) printf("Creating FFT Plan Forward \n" );
   plan_forw = pfft_plan_dft_3d(
      n_total, in, out, comm_cart_3d, PFFT_FORWARD, PFFT_TRANSPOSED_NONE| PFFT_MEASURE| PFFT_DESTROY_INPUT);
-  // 
-  /* Plan parallel backward FFT */
-  if ( rank == 0 ) printf("Creating FFT Plan Backward \n" );
-  plan_back = pfft_plan_dft_3d(
-     n_total, out, in, comm_cart_3d, PFFT_BACKWARD, PFFT_TRANSPOSED_NONE| PFFT_MEASURE| PFFT_DESTROY_INPUT);
+  
+  if (compute_backward){
+    /* Plan parallel backward FFT */
+    if ( rank == 0 ) printf("Creating FFT Plan Backward \n" );
+    plan_back = pfft_plan_dft_3d(
+       n_total, out, in, comm_cart_3d, PFFT_BACKWARD, PFFT_TRANSPOSED_NONE| PFFT_MEASURE| PFFT_DESTROY_INPUT);
+  }
   
   // Set the input as the data field
   for ( int i=0; i<n_cells_local; i++ ){
     in[i][0] = data_field[i];
     in[i][1] = 0;
   }
-  
-  // /* Initialize input with random numbers */
-  // pfft_init_input_complex_3d(n_total, local_n_input, local_input_start,  in);
   
   /* execute parallel forward FFT */
   if ( rank == 0 ) printf("Excecuting FFT Forward \n" );
@@ -167,26 +179,59 @@ int main(int argc, char** argv) {
   for ( int i=0; i<n_cells_local; i++ ) fft_amp2[i] = out[i][0]*out[i][0] + out[i][1]*out[i][1];
   
   
-  // /* clear the old input */
-  // pfft_clear_input_complex_3d(n_total, local_n_input, local_input_start, in);
-  // 
-  // /* execute parallel backward FFT */
-  // if ( rank == 0 ) printf("Excecuting FFT Backward \n" );
-  // pfft_execute(plan_back);
-  // 
-  // /* Scale data */
-  // for(ptrdiff_t l=0; l < local_n_input[0] * local_n_input[1] * local_n_input[2]; l++){
-  //   in[l][0] /= (n_total[0]*n_total[1]*n_total[2]);
-  //   in[l][1] /= (n_total[0]*n_total[1]*n_total[2]);
-  // }
-  // 
-  // // /* Print error of back transformed data */
-  // Real error_local, error_global;
-  // error_local = 0;
-  // for ( int i=0; i<n_cells_local; i++ ) error_local += in[i][0] - data_field[i];
-  // error_global = ReduceRealSum( error_local );
-  // if ( rank == 0 ) printf("Error Global: %f\n", error_global );
+  //Compute Wave Numbers kx, ky, kz
+  Real *k_mag;
+  k_mag = (Real *) malloc(nx_local*ny_local*nz_local*sizeof(Real)); 
+  ptrdiff_t k_0, k_1, k_2;
+  Real k_x, k_y, k_z, k_magnitude, k_mag_min, k_mag_max;
+  int id;
+  k_mag_min = 1e100;
+  k_mag_max = -1e100;
+  for (int k=0; k<nz_local; k++ ){
+    for (int j=0; j<ny_local; j++ ){
+      for (int i=0; i<nx_local; i++ ){
+        id = i + j*nx_local + k*nx_local*ny_local;
+        
+        k_0 = k + local_input_start[0];
+        k_1 = j + local_input_start[1];
+        k_2 = i + local_input_start[2];
   
+        if ( k_2 >= nx_total/2) k_2 -= nx_total;
+        if ( k_0 >= nz_total/2) k_0 -= nz_total;
+        if ( k_1 >= ny_total/2) k_1 -= ny_total;
+        
+        k_x = 2*M_PI*k_2/Lx;
+        k_z = 2*M_PI*k_0/Ly;
+        k_y = 2*M_PI*k_1/Lz;
+        k_magnitude = sqrt( k_x*k_x + k_y*k_y + k_z*k_z);
+        k_mag[id] = k_magnitude;
+        k_mag_max = fmax( k_mag_max, k_magnitude );
+        if (k_magnitude > 0 ) k_mag_min = fmin( k_mag_min, k_magnitude );
+      }
+    }
+  }
+  
+  if ( compute_backward ){
+    /* clear the old input */
+    pfft_clear_input_complex_3d(n_total, local_n_input, local_input_start, in);
+    
+    /* execute parallel backward FFT */
+    if ( rank == 0 ) printf("Excecuting FFT Backward \n" );
+    pfft_execute(plan_back);
+    
+    /* Scale data */
+    for(ptrdiff_t l=0; l < local_n_input[0] * local_n_input[1] * local_n_input[2]; l++){
+      in[l][0] /= (n_total[0]*n_total[1]*n_total[2]);
+      in[l][1] /= (n_total[0]*n_total[1]*n_total[2]);
+    }
+    
+    // // /* Print error of back transformed data */
+    // Real error_local, error_global;
+    // error_local = 0;
+    // for ( int i=0; i<n_cells_local; i++ ) error_local += in[i][0] - data_field[i];
+    // error_global = ReduceRealSum( error_local );
+    // if ( rank == 0 ) printf("Error Global: %f\n", error_global );
+  }
   
   //Save to hdf5 file  
   ostringstream out_file_name;
@@ -215,6 +260,11 @@ int main(int argc, char** argv) {
   status = H5Awrite(attribute_id, H5T_NATIVE_INT, int_data);
   status = H5Aclose(attribute_id);
   
+  int_data[0] = nx_local; int_data[1] = ny_local; int_data[2] = nz_local;
+  attribute_id = H5Acreate(file_id, "dims_local", H5T_STD_I32BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
+  status = H5Awrite(attribute_id, H5T_NATIVE_INT, int_data);
+  status = H5Aclose(attribute_id);
+  
   int_data[0] = local_input_start[2]; int_data[1] = local_input_start[1]; int_data[2] = local_input_start[0];
   attribute_id = H5Acreate(file_id, "offset", H5T_STD_I32BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
   status = H5Awrite(attribute_id, H5T_NATIVE_INT, int_data);
@@ -225,7 +275,24 @@ int main(int argc, char** argv) {
   Write_field_to_file( field_name, data_field, nx_local, ny_local, nz_local, file_id  );
   
   field_name = "fft_amp2";
-  Write_field_to_file( field_name, fft_amp2, nx_local, ny_local, nz_local, file_id  );
+  Write_field_to_file( field_name, fft_amp2, nx_local, ny_local, nz_local, file_id  );  
+  
+  field_name = "k_mag";
+  Write_field_to_file( field_name, k_mag, nx_local, ny_local, nz_local, file_id  );
+  
+  // Single attributes first
+  attr_dims = 1;
+  dataspace_id = H5Screate_simple(1, &attr_dims, NULL);
+  attribute_id = H5Acreate(file_id, "k_mag_min", H5T_IEEE_F64BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
+  status = H5Awrite(attribute_id, H5T_NATIVE_DOUBLE, &k_mag_min);
+  status = H5Aclose(attribute_id);
+  
+  attribute_id = H5Acreate(file_id, "k_mag_max", H5T_IEEE_F64BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
+  status = H5Awrite(attribute_id, H5T_NATIVE_DOUBLE, &k_mag_max);
+  status = H5Aclose(attribute_id);
+  
+  // Close the dataspace
+  status = H5Sclose(dataspace_id);
 
   
   // close the file
@@ -241,11 +308,11 @@ int main(int argc, char** argv) {
   
   /* free mem and finalize */
   pfft_destroy_plan(plan_forw);
-  pfft_destroy_plan(plan_back);
+  if ( compute_backward ) pfft_destroy_plan(plan_back);
   MPI_Comm_free(&comm_cart_3d);
   pfft_free(in); pfft_free(out);  
   free( data_field );
-  
+  free( k_mag );
   
   MPI_Barrier(MPI_COMM_WORLD);
   if ( rank == 0 ) printf("Finished Successfully\n" );
