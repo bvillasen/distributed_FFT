@@ -14,6 +14,10 @@ CPPOBJS   = $(subst .cpp,.o,$(CPPFILES))
 CC	= mpicc
 CXX   = mpicxx
 
+
+#PRECISION = -DPRECISION=1
+PRECISION = -DPRECISION=2
+
 # HDF5 Location
 HDF5_INCL = -I/usr/include/hdf5/serial/
 HDF5_LIBS = -L/usr/lib/x86_64-linux-gnu/hdf5/serial/ -lhdf5
@@ -34,8 +38,9 @@ LIBS += $(FFTW_LIBS) $(PFFT_LIBS)
 
 
 
-
-
+FLAGS = $(PRECISION)
+CFLAGS = $(FLAGS)
+CXXFLAGS = $(FLAGS)
 
 
 
