@@ -88,7 +88,7 @@ int main(int argc, char** argv) {
   int n_snapshot = 0;
   ostringstream in_file_name;
   in_file_name << n_snapshot << "_particles.h5." << rank;
-  if ( rank == 0 ) printf("Loading File: %s\n",  (input_dir + file_name.str()).c_str() );
+  if ( rank == 0 ) printf("Loading File: %s\n",  (input_dir + in_file_name.str()).c_str() );
   string field_name = "density";
   Load_field_from_file( field_name, data_field, nx_local, ny_local, nz_local, in_file_name.str(), input_dir, rank, size   );
   
