@@ -80,6 +80,7 @@ int main(int argc, char** argv) {
     printf("Grid Global: [ %d %d %d]\n", nx_total, ny_total, nz_total );
     printf("Grid Global: [ %d %d %d]\n", nx_local, ny_local, nz_local );
   }
+  MPI_Barrier(MPI_COMM_WORLD);   
   
   //Allocate space for data
   Real *data_field = (Real *) malloc(nx_local*ny_local*nz_local*sizeof(Real)); 
@@ -87,8 +88,13 @@ int main(int argc, char** argv) {
   int n_snapshot = 0;
   ostringstream in_file_name;
   in_file_name << n_snapshot << "_particles.h5." << rank;
+  if ( rank == 0 ) printf("Loading File: %s\n",  (input_dir + file_name.str()).c_str() );
   string field_name = "density";
   Load_field_from_file( field_name, data_field, nx_local, ny_local, nz_local, in_file_name.str(), input_dir, rank, size   );
+  
+  MPI_Barrier(MPI_COMM_WORLD);   
+  if ( rank == 0 ) printf("Loaded Field: %s\n", field_name.c_str() );
+  
   
   Real field_mean_local, field_mean_global;
   field_mean_local = 0;
@@ -239,8 +245,8 @@ int main(int argc, char** argv) {
   hid_t   file_id; /* file identifier */
   herr_t  status;
 
-  string out_text = " Writing File: " + output_dir + out_file_name.str();
-  print_mpi( out_text, rank, size  );
+  // string out_text = " Writing File: " + output_dir + out_file_name.str();
+  // print_mpi( out_text, rank, size  );
   // Create a new file using default properties.
   file_id = H5Fcreate( (output_dir + out_file_name.str()).c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT); 
   
@@ -298,6 +304,9 @@ int main(int argc, char** argv) {
   // close the file
   status = H5Fclose(file_id);
   if (status < 0) {printf("File write failed.\n"); exit(-1); }
+  
+  MPI_Barrier(MPI_COMM_WORLD);   
+  if ( rank == 0 ) printf("Saved File: %s\n", (output_dir + out_file_name.str()).c_str());
 
   
   

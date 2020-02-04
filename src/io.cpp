@@ -20,10 +20,10 @@ void print_mpi( const string &text_out, int rank, int nprocs  ){
 void Load_field_from_file( const string &field_name, Real *data_field, int nx_local, int ny_local, int nz_local,  const string &file_name, const string &input_dir, int rank, int nprocs  ){
   
   
-  if ( rank == 0 ) printf("Loading Field: %s\n", field_name.c_str() );
-  
-  string out_text = " Loading File: " + input_dir + file_name;
-  print_mpi( out_text, rank, nprocs );
+  // if ( rank == 0 ) printf("Loading Field: %s\n", field_name.c_str() );
+  // 
+  // string out_text = " Loading File: " + input_dir + file_name;
+  // print_mpi( out_text, rank, nprocs );
   
   hid_t  file_id;
   herr_t  status;
