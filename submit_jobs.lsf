@@ -9,7 +9,7 @@
 #BSUB -alloc_flags "smt4"
 
 module load hdf5
-
+ 
 export WORK_DIR=/ccs/home/bvilasen/distributed_FFT
 cd $WORK_DIR
 
