@@ -13,4 +13,4 @@ module load hdf5
 export WORK_DIR=/ccs/home/bvilasen/distributed_FFT
 cd $WORK_DIR
 
-jsrun -n 512 -a 1 -c 1 -l CPU-CPU -d packed -b packed:1 ./distributed_FFT > run_output.log | sort
+jsrun -n 512 -a 1 -c 1 -l CPU-CPU -d packed -b packed:1 ./distributed_FFT  | sort
