@@ -40,8 +40,8 @@ int main(int argc, char** argv) {
   // input_dir  = data_dir + "cosmo_sims/256_dm_50Mpc/output_files/";
   // output_dir = data_dir + "cosmo_sims/256_dm_50Mpc/output_files/data_fft/";
   data_dir = "/gpfs/alpine/proj-shared/ast149/";
-  input_dir  = data_dir + "cosmo_sims/2048_dm_50Mpc/output_files_hm12/";
-  output_dir = data_dir + "cosmo_sims/2048_dm_50Mpc/snapshots_hm12/power_spectrum_new/data_fft/";
+  input_dir  = data_dir + "cosmo_sims/2048_hydro_50Mpc/output_files_hm12/";
+  output_dir = data_dir + "cosmo_sims/2048_hydro_50Mpc/snapshots_hm12/power_spectrum_new/data_fft/";
   
   if ( rank == 0 ){
     printf("Distributed FFT \n" );
