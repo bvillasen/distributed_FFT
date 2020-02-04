@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
   // printf("Hello world from processor %s, rank %d out of %d processors\n", processor_name, rank, size);
   
   
-  string data_dir, input_dir, output_dir;
+  string data_dir, input_dir, output_dir; 
   // data_dir = "/home/bruno/Desktop/ssd_0/data/";
   // input_dir  = data_dir + "cosmo_sims/256_dm_50Mpc/output_files/";
   // output_dir = data_dir + "cosmo_sims/256_dm_50Mpc/output_files/data_fft/";
