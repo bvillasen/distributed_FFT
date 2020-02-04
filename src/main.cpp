@@ -271,8 +271,8 @@ int main(int argc, char** argv) {
   status = H5Aclose(attribute_id);
   
   
-  field_name = "input";
-  Write_field_to_file( field_name, data_field, nx_local, ny_local, nz_local, file_id  );
+  // field_name = "input";
+  // Write_field_to_file( field_name, data_field, nx_local, ny_local, nz_local, file_id  );
   
   field_name = "fft_amp2";
   Write_field_to_file( field_name, fft_amp2, nx_local, ny_local, nz_local, file_id  );  
