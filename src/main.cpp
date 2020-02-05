@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
   // output_dir = data_dir + "cosmo_sims/256_dm_50Mpc/output_files/data_fft/";
   data_dir = "/gpfs/alpine/proj-shared/ast149/";
   input_dir  = data_dir + "cosmo_sims/2048_hydro_50Mpc/output_files_hm12/";
-  output_dir = data_dir + "cosmo_sims/2048_hydro_50Mpc/power_spectrum_hm12/data_fft/";;
+  output_dir = data_dir + "cosmo_sims/2048_hydro_50Mpc/power_spectrum_hm12/gas/data_fft/";;
   
   // input_dir = "/home/brvillas/cosmo_sims/2048_hydro_50Mpc/output_files_hm12/";
   // output_dir = "/home/brvillas/cosmo_sims/2048_hydro_50Mpc/power_spectrum_hm12/data_fft/";
@@ -84,30 +84,6 @@ int main(int argc, char** argv) {
     print_single("Grid Global: [ %d %d %d]\n", nx_local, ny_local, nz_local );
   }
   MPI_Barrier(MPI_COMM_WORLD);   
-  
-  //Allocate space for data
-  Real *data_field = (Real *) malloc(nx_local*ny_local*nz_local*sizeof(Real)); 
-  
-  int n_snapshot = 0;
-  ostringstream in_file_name;
-  in_file_name << n_snapshot << "_particles.h5." << rank;
-  if ( rank == 0 ) print_single("Loading File: %s\n",  (input_dir + in_file_name.str()).c_str() );
-  string field_name = "density";
-  Load_field_from_file( field_name, data_field, nx_local, ny_local, nz_local, in_file_name.str(), input_dir, rank, size   );
-  
-  MPI_Barrier(MPI_COMM_WORLD);   
-  if ( rank == 0 ) print_single("Loaded Field: %s\n", field_name.c_str() );
-  
-  
-  Real field_mean_local, field_mean_global;
-  field_mean_local = 0;
-  for ( int i=0; i<n_cells_local; i++ ) field_mean_local += data_field[i];
-  field_mean_local /= n_cells_local;
-  field_mean_global = ReduceRealAvg( field_mean_local, size );
-  if ( rank == 0 ) print_single("Mean %s: %f\n", field_name.c_str(), field_mean_global );
-  
-  // Compute the overdensity
-  for ( int i=0; i<n_cells_local; i++ ) data_field[i] = data_field[i] / field_mean_global;
   
   
   
@@ -172,6 +148,35 @@ int main(int argc, char** argv) {
     plan_back = pfft_plan_dft_3d(
        n_total, out, in, comm_cart_3d, PFFT_BACKWARD, PFFT_TRANSPOSED_NONE| PFFT_MEASURE| PFFT_DESTROY_INPUT);
   }
+  
+  
+  
+  //Allocate space for data
+  Real *data_field = (Real *) malloc(nx_local*ny_local*nz_local*sizeof(Real)); 
+  
+  int n_snapshot = 0;
+  ostringstream in_file_name;
+  // in_file_name << n_snapshot << "_particles.h5." << rank;
+  in_file_name << n_snapshot << ".h5." << rank;
+  if ( rank == 0 ) print_single("Loading File: %s\n",  (input_dir + in_file_name.str()).c_str() );
+  string field_name = "density";
+  Load_field_from_file( field_name, data_field, nx_local, ny_local, nz_local, in_file_name.str(), input_dir, rank, size   );
+  
+  MPI_Barrier(MPI_COMM_WORLD);   
+  if ( rank == 0 ) print_single("Loaded Field: %s\n", field_name.c_str() );
+  
+  
+  Real field_mean_local, field_mean_global;
+  field_mean_local = 0;
+  for ( int i=0; i<n_cells_local; i++ ) field_mean_local += data_field[i];
+  field_mean_local /= n_cells_local;
+  field_mean_global = ReduceRealAvg( field_mean_local, size );
+  if ( rank == 0 ) print_single("Mean %s: %f\n", field_name.c_str(), field_mean_global );
+  
+  // Compute the overdensity
+  for ( int i=0; i<n_cells_local; i++ ) data_field[i] = data_field[i] / field_mean_global;
+  
+  
   
   // Set the input as the data field
   for ( int i=0; i<n_cells_local; i++ ){
