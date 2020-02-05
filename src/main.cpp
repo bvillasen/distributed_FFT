@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <ctime> 
+#include<sys/time.h>
 #include "global.h"
 #include "io.h"
 #include "mpi_functions.h"
