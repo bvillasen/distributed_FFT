@@ -28,7 +28,7 @@ double get_time(void)
 int main(int argc, char** argv) {
   
   // Start the timer 
-  double time_start, time_stop;
+  double time_start, time_stop, time;
   time_start = get_time();
   
   
@@ -165,6 +165,10 @@ int main(int argc, char** argv) {
   }
   
   
+  time_stop = get_time();
+  time = (time_end - time_start)*1000;
+  if (rank == 0 ) print_single( "Elapsed Time: %f\n", time )
+  
   
   //Allocate space for data
   Real *data_field = (Real *) malloc(nx_local*ny_local*nz_local*sizeof(Real)); 
@@ -183,7 +187,10 @@ int main(int argc, char** argv) {
   
   int n_snapshot;
   for ( int snapshot_index = 0; snapshot_index<2; snapshot_index++ ){
-    n_snapshot = 1;
+    
+    time_stop = get_time();
+    
+    n_snapshot = 0;
     // in_file_name << n_snapshot << "_particles.h5." << rank;
     in_file_name << n_snapshot << ".h5." << rank;
     field_name = "density";
@@ -291,6 +298,9 @@ int main(int argc, char** argv) {
     if ( rank == 0 ) print_single("Saved File: %s\n", (output_dir + out_file_name.str()).c_str());
     
     
+    time_stop = get_time();
+    time = (time_end - time_start)*1000;
+    if (rank == 0 ) print_single( "Elapsed Time: %f\n", time )
 
   }
   
