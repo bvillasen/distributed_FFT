@@ -44,7 +44,8 @@ int main(int argc, char** argv) {
   // output_dir = data_dir + "cosmo_sims/2048_hydro_50Mpc/snapshots_hm12/power_spectrum/data_fft/";
   
   input_dir = "/home/brvillas/cosmo_sims/2048_hydro_50Mpc/output_files_pchw18/";
-  output_dir = "/home/brvillas/cosmo_sims/2048_hydro_50Mpc/snapshots_hm12/power_spectrum/data_fft_lux/";
+  output_dir = "/home/brvillas/cosmo_sims/2048_hydro_50Mpc/output_files_pchw18/data_fft/";
+  
   if ( rank == 0 ){
     printf("Distributed FFT \n" );
     printf("InputDir: %s\n",  input_dir.c_str() );
