@@ -16,6 +16,6 @@ void Write_field_to_file( const string &field_name, Real *data_field, int nx_loc
 
 void print_mpi(const string &text_out, int rank, int nprocs  );
 
-int print_single(const char * __restrict sdata, ...)
+int print_single(const char * __restrict sdata, ...);
 
 #endif //IO_H
