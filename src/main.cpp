@@ -167,7 +167,7 @@ int main(int argc, char** argv) {
   
   time_stop = get_time();
   time = (time_end - time_start)*1000;
-  if (rank == 0 ) print_single( "Elapsed Time: %f\n", time )
+  if (rank == 0 ) print_single( "Elapsed Time: %f\n", time );
   
   
   //Allocate space for data
@@ -300,7 +300,7 @@ int main(int argc, char** argv) {
     
     time_stop = get_time();
     time = (time_end - time_start)*1000;
-    if (rank == 0 ) print_single( "Elapsed Time: %f\n", time )
+    if (rank == 0 ) print_single( "Elapsed Time: %f\n", time );
 
   }
   
