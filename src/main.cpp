@@ -53,6 +53,8 @@ int main(int argc, char** argv) {
   }
   
   
+  bool write_k_vals = false;
+  
   int n_proc_x, n_proc_y, n_proc_z;
   int nx_total, ny_total, nz_total;
   int nx_local, ny_local, nz_local;
@@ -154,170 +156,118 @@ int main(int argc, char** argv) {
   //Allocate space for data
   Real *data_field = (Real *) malloc(nx_local*ny_local*nz_local*sizeof(Real)); 
   
-  int n_snapshot = 0;
   ostringstream in_file_name;
-  // in_file_name << n_snapshot << "_particles.h5." << rank;
-  in_file_name << n_snapshot << ".h5." << rank;
-  if ( rank == 0 ) print_single("Loading File: %s\n",  (input_dir + in_file_name.str()).c_str() );
   string field_name = "density";
-  Load_field_from_file( field_name, data_field, nx_local, ny_local, nz_local, in_file_name.str(), input_dir, rank, size   );
-  
-  MPI_Barrier(MPI_COMM_WORLD);   
-  if ( rank == 0 ) print_single("Loaded Field: %s\n", field_name.c_str() );
-  
-  
   Real field_mean_local, field_mean_global;
-  field_mean_local = 0;
-  for ( int i=0; i<n_cells_local; i++ ) field_mean_local += data_field[i];
-  field_mean_local /= n_cells_local;
-  field_mean_global = ReduceRealAvg( field_mean_local, size );
-  if ( rank == 0 ) print_single("Mean %s: %f\n", field_name.c_str(), field_mean_global );
-  
-  // Compute the overdensity
-  for ( int i=0; i<n_cells_local; i++ ) data_field[i] = data_field[i] / field_mean_global;
-  
-  
-  
-  // Set the input as the data field
-  for ( int i=0; i<n_cells_local; i++ ){
-    in[i][0] = data_field[i];
-    in[i][1] = 0;
-  }
-  
-  /* execute parallel forward FFT */
-  if ( rank == 0 ) print_single("Excecuting FFT Forward \n" );
-  pfft_execute(plan_forw);
-  
-  // Compute the amplitude of the FFT
-  Real *fft_amp2 = (Real *) malloc(nx_local*ny_local*nz_local*sizeof(Real)); 
-  for ( int i=0; i<n_cells_local; i++ ) fft_amp2[i] = out[i][0]*out[i][0] + out[i][1]*out[i][1];
-  
-  
-  //Compute Wave Numbers kx, ky, kz
-  Real *k_mag;
-  k_mag = (Real *) malloc(nx_local*ny_local*nz_local*sizeof(Real)); 
-  ptrdiff_t k_0, k_1, k_2;
-  Real k_x, k_y, k_z, k_magnitude, k_mag_min, k_mag_max;
-  int id;
-  k_mag_min = 1e100;
-  k_mag_max = -1e100;
-  for (int k=0; k<nz_local; k++ ){
-    for (int j=0; j<ny_local; j++ ){
-      for (int i=0; i<nx_local; i++ ){
-        id = i + j*nx_local + k*nx_local*ny_local;
-        
-        k_0 = k + local_input_start[0];
-        k_1 = j + local_input_start[1];
-        k_2 = i + local_input_start[2];
-  
-        if ( k_2 >= nx_total/2) k_2 -= nx_total;
-        if ( k_0 >= nz_total/2) k_0 -= nz_total;
-        if ( k_1 >= ny_total/2) k_1 -= ny_total;
-        
-        k_x = 2*M_PI*k_2/Lx;
-        k_z = 2*M_PI*k_0/Ly;
-        k_y = 2*M_PI*k_1/Lz;
-        k_magnitude = sqrt( k_x*k_x + k_y*k_y + k_z*k_z);
-        k_mag[id] = k_magnitude;
-        k_mag_max = fmax( k_mag_max, k_magnitude );
-        if (k_magnitude > 0 ) k_mag_min = fmin( k_mag_min, k_magnitude );
-      }
-    }
-  }
-  
-  if ( compute_backward ){
-    /* clear the old input */
-    pfft_clear_input_complex_3d(n_total, local_n_input, local_input_start, in);
-    
-    /* execute parallel backward FFT */
-    if ( rank == 0 ) print_single("Excecuting FFT Backward \n" );
-    pfft_execute(plan_back);
-    
-    /* Scale data */
-    for(ptrdiff_t l=0; l < local_n_input[0] * local_n_input[1] * local_n_input[2]; l++){
-      in[l][0] /= (n_total[0]*n_total[1]*n_total[2]);
-      in[l][1] /= (n_total[0]*n_total[1]*n_total[2]);
-    }
-    
-    // // /* Print error of back transformed data */
-    // Real error_local, error_global;
-    // error_local = 0;
-    // for ( int i=0; i<n_cells_local; i++ ) error_local += in[i][0] - data_field[i];
-    // error_global = ReduceRealSum( error_local );
-    // if ( rank == 0 ) print_single("Error Global: %f\n", error_global );
-  }
-  
-  //Save to hdf5 file  
+  Real *fft_amp2, *k_mag;
   ostringstream out_file_name;
-  out_file_name  << n_snapshot << "_data_fft" << ".h5." << rank;
   hid_t   file_id; /* file identifier */
   herr_t  status;
-
-  // Create a new file using default properties.
-  file_id = H5Fcreate( (output_dir + out_file_name.str()).c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT); 
-  
-  // Write Header  
   hsize_t   attr_dims;
   hid_t     attribute_id, dataspace_id;
   int       int_data[3];
   
   
-  // 3D attributes
-  attr_dims = 3;
-  // Create the data space for the attribute
-  dataspace_id = H5Screate_simple(1, &attr_dims, NULL);
-  
-  int_data[0] = nx_total; int_data[1] = ny_total; int_data[2] = nz_total;
-  attribute_id = H5Acreate(file_id, "dims", H5T_STD_I32BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
-  status = H5Awrite(attribute_id, H5T_NATIVE_INT, int_data);
-  status = H5Aclose(attribute_id);
-  
-  int_data[0] = nx_local; int_data[1] = ny_local; int_data[2] = nz_local;
-  attribute_id = H5Acreate(file_id, "dims_local", H5T_STD_I32BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
-  status = H5Awrite(attribute_id, H5T_NATIVE_INT, int_data);
-  status = H5Aclose(attribute_id);
-  
-  int_data[0] = local_input_start[2]; int_data[1] = local_input_start[1]; int_data[2] = local_input_start[0];
-  attribute_id = H5Acreate(file_id, "offset", H5T_STD_I32BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
-  status = H5Awrite(attribute_id, H5T_NATIVE_INT, int_data);
-  status = H5Aclose(attribute_id);
-  
-  
-  // field_name = "input";
-  // Write_field_to_file( field_name, data_field, nx_local, ny_local, nz_local, file_id  );
-  
-  field_name = "fft_amp2";
-  Write_field_to_file( field_name, fft_amp2, nx_local, ny_local, nz_local, file_id  );  
-  
-  // Close the dataspace
-  status = H5Sclose(dataspace_id);
-
-  
-  // close the file
-  status = H5Fclose(file_id);
-  if (status < 0) {print_single("File write failed.\n"); exit(-1); }
-  
-  MPI_Barrier(MPI_COMM_WORLD);   
-  if ( rank == 0 ) print_single("Saved File: %s\n", (output_dir + out_file_name.str()).c_str());
-  
-  
-  bool write_k_vals = true;
-  if ( write_k_vals ){
+  int n_snapshot;
+  for ( int snapshot_index = 0; snapshot_index<2; snapshot_index++ ){
+    n_snapshot = 1;
+    // in_file_name << n_snapshot << "_particles.h5." << rank;
+    in_file_name << n_snapshot << ".h5." << rank;
+    if ( rank == 0 ) print_single("Loading File: %s\n",  (input_dir + in_file_name.str()).c_str() );
+    Load_field_from_file( field_name, data_field, nx_local, ny_local, nz_local, in_file_name.str(), input_dir, rank, size   );
+    
+    MPI_Barrier(MPI_COMM_WORLD);   
+    if ( rank == 0 ) print_single("Loaded Field: %s\n", field_name.c_str() );
+    
+    
+    field_mean_local = 0;
+    for ( int i=0; i<n_cells_local; i++ ) field_mean_local += data_field[i];
+    field_mean_local /= n_cells_local;
+    field_mean_global = ReduceRealAvg( field_mean_local, size );
+    if ( rank == 0 ) print_single("Mean %s: %f\n", field_name.c_str(), field_mean_global );
+    
+    // Compute the overdensity
+    for ( int i=0; i<n_cells_local; i++ ) data_field[i] = data_field[i] / field_mean_global;
+    
+    
+    
+    // Set the input as the data field
+    for ( int i=0; i<n_cells_local; i++ ){
+      in[i][0] = data_field[i];
+      in[i][1] = 0;
+    }
+    
+    /* execute parallel forward FFT */
+    if ( rank == 0 ) print_single("Excecuting FFT Forward \n" );
+    pfft_execute(plan_forw);
+    
+    // Compute the amplitude of the FFT
+    fft_amp2 = (Real *) malloc(nx_local*ny_local*nz_local*sizeof(Real)); 
+    for ( int i=0; i<n_cells_local; i++ ) fft_amp2[i] = out[i][0]*out[i][0] + out[i][1]*out[i][1];
+    
+    
+    //Compute Wave Numbers kx, ky, kz
+    if write_k_vals{
+      k_mag = (Real *) malloc(nx_local*ny_local*nz_local*sizeof(Real)); 
+      ptrdiff_t k_0, k_1, k_2;
+      Real k_x, k_y, k_z, k_magnitude, k_mag_min, k_mag_max;
+      int id;
+      k_mag_min = 1e100;
+      k_mag_max = -1e100;
+      for (int k=0; k<nz_local; k++ ){
+        for (int j=0; j<ny_local; j++ ){
+          for (int i=0; i<nx_local; i++ ){
+            id = i + j*nx_local + k*nx_local*ny_local;
+            
+            k_0 = k + local_input_start[0];
+            k_1 = j + local_input_start[1];
+            k_2 = i + local_input_start[2];
+      
+            if ( k_2 >= nx_total/2) k_2 -= nx_total;
+            if ( k_0 >= nz_total/2) k_0 -= nz_total;
+            if ( k_1 >= ny_total/2) k_1 -= ny_total;
+            
+            k_x = 2*M_PI*k_2/Lx;
+            k_z = 2*M_PI*k_0/Ly;
+            k_y = 2*M_PI*k_1/Lz;
+            k_magnitude = sqrt( k_x*k_x + k_y*k_y + k_z*k_z);
+            k_mag[id] = k_magnitude;
+            k_mag_max = fmax( k_mag_max, k_magnitude );
+            if (k_magnitude > 0 ) k_mag_min = fmin( k_mag_min, k_magnitude );
+          }
+        }
+      }
+    }
+    
+    if ( compute_backward ){
+      /* clear the old input */
+      pfft_clear_input_complex_3d(n_total, local_n_input, local_input_start, in);
+      
+      /* execute parallel backward FFT */
+      if ( rank == 0 ) print_single("Excecuting FFT Backward \n" );
+      pfft_execute(plan_back);
+      
+      /* Scale data */
+      for(ptrdiff_t l=0; l < local_n_input[0] * local_n_input[1] * local_n_input[2]; l++){
+        in[l][0] /= (n_total[0]*n_total[1]*n_total[2]);
+        in[l][1] /= (n_total[0]*n_total[1]*n_total[2]);
+      }
+      
+      // // /* Print error of back transformed data */
+      // Real error_local, error_global;
+      // error_local = 0;
+      // for ( int i=0; i<n_cells_local; i++ ) error_local += in[i][0] - data_field[i];
+      // error_global = ReduceRealSum( error_local );
+      // if ( rank == 0 ) print_single("Error Global: %f\n", error_global );
+    }
+    
     //Save to hdf5 file  
-    ostringstream out_file_name;
-    out_file_name  << n_snapshot << "_k_magnitude" << ".h5." << rank;
-    hid_t   file_id; /* file identifier */
-    herr_t  status;
+    out_file_name  << n_snapshot << "_data_fft" << ".h5." << rank;
 
     // Create a new file using default properties.
     file_id = H5Fcreate( (output_dir + out_file_name.str()).c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT); 
     
     // Write Header  
-    hsize_t   attr_dims;
-    hid_t     attribute_id, dataspace_id;
-    int       int_data[3];
-    
-    
     // 3D attributes
     attr_dims = 3;
     // Create the data space for the attribute
@@ -338,19 +288,12 @@ int main(int argc, char** argv) {
     status = H5Awrite(attribute_id, H5T_NATIVE_INT, int_data);
     status = H5Aclose(attribute_id);
     
-    field_name = "k_mag";
-    Write_field_to_file( field_name, k_mag, nx_local, ny_local, nz_local, file_id  );
     
-    // Single attributes first
-    attr_dims = 1;
-    dataspace_id = H5Screate_simple(1, &attr_dims, NULL);
-    attribute_id = H5Acreate(file_id, "k_mag_min", H5T_IEEE_F64BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
-    status = H5Awrite(attribute_id, H5T_NATIVE_DOUBLE, &k_mag_min);
-    status = H5Aclose(attribute_id);
+    // field_name = "input";
+    // Write_field_to_file( field_name, data_field, nx_local, ny_local, nz_local, file_id  );
     
-    attribute_id = H5Acreate(file_id, "k_mag_max", H5T_IEEE_F64BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
-    status = H5Awrite(attribute_id, H5T_NATIVE_DOUBLE, &k_mag_max);
-    status = H5Aclose(attribute_id);
+    field_name = "fft_amp2";
+    Write_field_to_file( field_name, fft_amp2, nx_local, ny_local, nz_local, file_id  );  
     
     // Close the dataspace
     status = H5Sclose(dataspace_id);
@@ -362,10 +305,73 @@ int main(int argc, char** argv) {
     
     MPI_Barrier(MPI_COMM_WORLD);   
     if ( rank == 0 ) print_single("Saved File: %s\n", (output_dir + out_file_name.str()).c_str());
+    
+    
+    if ( write_k_vals ){
+      //Save to hdf5 file  
+      ostringstream out_file_name;
+      out_file_name  << n_snapshot << "_k_magnitude" << ".h5." << rank;
+      hid_t   file_id; /* file identifier */
+      herr_t  status;
 
+      // Create a new file using default properties.
+      file_id = H5Fcreate( (output_dir + out_file_name.str()).c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT); 
+      
+      // Write Header  
+      hsize_t   attr_dims;
+      hid_t     attribute_id, dataspace_id;
+      int       int_data[3];
+      
+      
+      // 3D attributes
+      attr_dims = 3;
+      // Create the data space for the attribute
+      dataspace_id = H5Screate_simple(1, &attr_dims, NULL);
+      
+      int_data[0] = nx_total; int_data[1] = ny_total; int_data[2] = nz_total;
+      attribute_id = H5Acreate(file_id, "dims", H5T_STD_I32BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
+      status = H5Awrite(attribute_id, H5T_NATIVE_INT, int_data);
+      status = H5Aclose(attribute_id);
+      
+      int_data[0] = nx_local; int_data[1] = ny_local; int_data[2] = nz_local;
+      attribute_id = H5Acreate(file_id, "dims_local", H5T_STD_I32BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
+      status = H5Awrite(attribute_id, H5T_NATIVE_INT, int_data);
+      status = H5Aclose(attribute_id);
+      
+      int_data[0] = local_input_start[2]; int_data[1] = local_input_start[1]; int_data[2] = local_input_start[0];
+      attribute_id = H5Acreate(file_id, "offset", H5T_STD_I32BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
+      status = H5Awrite(attribute_id, H5T_NATIVE_INT, int_data);
+      status = H5Aclose(attribute_id);
+      
+      field_name = "k_mag";
+      Write_field_to_file( field_name, k_mag, nx_local, ny_local, nz_local, file_id  );
+      
+      // Single attributes first
+      attr_dims = 1;
+      dataspace_id = H5Screate_simple(1, &attr_dims, NULL);
+      attribute_id = H5Acreate(file_id, "k_mag_min", H5T_IEEE_F64BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
+      status = H5Awrite(attribute_id, H5T_NATIVE_DOUBLE, &k_mag_min);
+      status = H5Aclose(attribute_id);
+      
+      attribute_id = H5Acreate(file_id, "k_mag_max", H5T_IEEE_F64BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
+      status = H5Awrite(attribute_id, H5T_NATIVE_DOUBLE, &k_mag_max);
+      status = H5Aclose(attribute_id);
+      
+      // Close the dataspace
+      status = H5Sclose(dataspace_id);
+
+      
+      // close the file
+      status = H5Fclose(file_id);
+      if (status < 0) {print_single("File write failed.\n"); exit(-1); }
+      
+      MPI_Barrier(MPI_COMM_WORLD);   
+      if ( rank == 0 ) print_single("Saved File: %s\n", (output_dir + out_file_name.str()).c_str());
+
+
+    }
 
   }
-
   
   
   
