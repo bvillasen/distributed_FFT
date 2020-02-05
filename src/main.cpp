@@ -207,8 +207,8 @@ int main(int argc, char** argv) {
     
     
     //Compute Wave Numbers kx, ky, kz
-    if write_k_vals{
-      k_mag = (Real *) malloc(nx_local*ny_local*nz_local*sizeof(Real)); 
+    if (write_k_vals){
+      k_mag = (Real *) malloc(nx_local*ny_local*nz_local*sizeof(Real));
       ptrdiff_t k_0, k_1, k_2;
       Real k_x, k_y, k_z, k_magnitude, k_mag_min, k_mag_max;
       int id;
