@@ -3,6 +3,16 @@
 #include <unistd.h>
 #include <mpi.h>
 
+/* MPI-safe printf routine */
+int print_single(const char * __restrict sdata, ...){
+  int code = 0;
+  va_list ap;
+  va_start(ap, sdata);
+  code = vfprintf(stdout, sdata, ap);
+  va_end(ap);
+
+  return code;
+}
 
 void print_mpi( const string &text_out, int rank, int nprocs  ){
   

@@ -32,7 +32,7 @@ int main(int argc, char** argv) {
   int name_len;
   MPI_Get_processor_name(processor_name, &name_len);
   // Print off a hello world message
-  // printf("Hello world from processor %s, rank %d out of %d processors\n", processor_name, rank, size);
+  // print_single("Hello world from processor %s, rank %d out of %d processors\n", processor_name, rank, size);
   
   
   string data_dir, input_dir, output_dir; 
@@ -47,9 +47,9 @@ int main(int argc, char** argv) {
   // output_dir = "/home/brvillas/cosmo_sims/2048_hydro_50Mpc/power_spectrum_hm12/data_fft/";
   
   if ( rank == 0 ){
-    printf("Distributed FFT \n" );
-    printf("InputDir: %s\n",  input_dir.c_str() );
-    printf("OutputDir: %s\n", output_dir.c_str() );
+    print_single("Distributed FFT \n" );
+    print_single("InputDir: %s\n",  input_dir.c_str() );
+    print_single("OutputDir: %s\n", output_dir.c_str() );
   }
   
   
@@ -79,9 +79,9 @@ int main(int argc, char** argv) {
   n_cells_total = nx_total*ny_total*nz_total;
   
   if ( rank == 0 ){
-    printf("N Procs: [ %d %d %d]\n", n_proc_x, n_proc_y, n_proc_z );
-    printf("Grid Global: [ %d %d %d]\n", nx_total, ny_total, nz_total );
-    printf("Grid Global: [ %d %d %d]\n", nx_local, ny_local, nz_local );
+    print_single("N Procs: [ %d %d %d]\n", n_proc_x, n_proc_y, n_proc_z );
+    print_single("Grid Global: [ %d %d %d]\n", nx_total, ny_total, nz_total );
+    print_single("Grid Global: [ %d %d %d]\n", nx_local, ny_local, nz_local );
   }
   MPI_Barrier(MPI_COMM_WORLD);   
   
@@ -91,12 +91,12 @@ int main(int argc, char** argv) {
   int n_snapshot = 0;
   ostringstream in_file_name;
   in_file_name << n_snapshot << "_particles.h5." << rank;
-  if ( rank == 0 ) printf("Loading File: %s\n",  (input_dir + in_file_name.str()).c_str() );
+  if ( rank == 0 ) print_single("Loading File: %s\n",  (input_dir + in_file_name.str()).c_str() );
   string field_name = "density";
   Load_field_from_file( field_name, data_field, nx_local, ny_local, nz_local, in_file_name.str(), input_dir, rank, size   );
   
   MPI_Barrier(MPI_COMM_WORLD);   
-  if ( rank == 0 ) printf("Loaded Field: %s\n", field_name.c_str() );
+  if ( rank == 0 ) print_single("Loaded Field: %s\n", field_name.c_str() );
   
   
   Real field_mean_local, field_mean_global;
@@ -104,7 +104,7 @@ int main(int argc, char** argv) {
   for ( int i=0; i<n_cells_local; i++ ) field_mean_local += data_field[i];
   field_mean_local /= n_cells_local;
   field_mean_global = ReduceRealAvg( field_mean_local, size );
-  if ( rank == 0 ) printf("Mean %s: %f\n", field_name.c_str(), field_mean_global );
+  if ( rank == 0 ) print_single("Mean %s: %f\n", field_name.c_str(), field_mean_global );
   
   // Compute the overdensity
   for ( int i=0; i<n_cells_local; i++ ) data_field[i] = data_field[i] / field_mean_global;
@@ -147,11 +147,11 @@ int main(int argc, char** argv) {
   for (int i=0; i<3; i++ ){
     if ( local_n_input[i] != local_n_output[i]) domain_error = true;
     if ( local_input_start[i] != local_output_start[i]) domain_error = true;
-    // if ( rank == 0 ) printf("n_in: %d   n_out: %d   \n", local_n_input[i], local_n_output[i]  );
+    // if ( rank == 0 ) print_single("n_in: %d   n_out: %d   \n", local_n_input[i], local_n_output[i]  );
   }
   //Exit if the dimensions and offsets are not the same
   if ( domain_error ){
-   printf("PFFT: FFT doamin error \n" );
+   print_single("PFFT: FFT doamin error \n" );
    exit(-1);
   }
   
@@ -162,13 +162,13 @@ int main(int argc, char** argv) {
   bool compute_backward = false;
   
   /* Plan parallel forward FFT */
-  if ( rank == 0 ) printf("Creating FFT Plan Forward \n" );
+  if ( rank == 0 ) print_single("Creating FFT Plan Forward \n" );
   plan_forw = pfft_plan_dft_3d(
      n_total, in, out, comm_cart_3d, PFFT_FORWARD, PFFT_TRANSPOSED_NONE| PFFT_MEASURE| PFFT_DESTROY_INPUT);
   
   if (compute_backward){
     /* Plan parallel backward FFT */
-    if ( rank == 0 ) printf("Creating FFT Plan Backward \n" );
+    if ( rank == 0 ) print_single("Creating FFT Plan Backward \n" );
     plan_back = pfft_plan_dft_3d(
        n_total, out, in, comm_cart_3d, PFFT_BACKWARD, PFFT_TRANSPOSED_NONE| PFFT_MEASURE| PFFT_DESTROY_INPUT);
   }
@@ -180,7 +180,7 @@ int main(int argc, char** argv) {
   }
   
   /* execute parallel forward FFT */
-  if ( rank == 0 ) printf("Excecuting FFT Forward \n" );
+  if ( rank == 0 ) print_single("Excecuting FFT Forward \n" );
   pfft_execute(plan_forw);
   
   // Compute the amplitude of the FFT
@@ -225,7 +225,7 @@ int main(int argc, char** argv) {
     pfft_clear_input_complex_3d(n_total, local_n_input, local_input_start, in);
     
     /* execute parallel backward FFT */
-    if ( rank == 0 ) printf("Excecuting FFT Backward \n" );
+    if ( rank == 0 ) print_single("Excecuting FFT Backward \n" );
     pfft_execute(plan_back);
     
     /* Scale data */
@@ -239,7 +239,7 @@ int main(int argc, char** argv) {
     // error_local = 0;
     // for ( int i=0; i<n_cells_local; i++ ) error_local += in[i][0] - data_field[i];
     // error_global = ReduceRealSum( error_local );
-    // if ( rank == 0 ) printf("Error Global: %f\n", error_global );
+    // if ( rank == 0 ) print_single("Error Global: %f\n", error_global );
   }
   
   //Save to hdf5 file  
@@ -290,10 +290,10 @@ int main(int argc, char** argv) {
   
   // close the file
   status = H5Fclose(file_id);
-  if (status < 0) {printf("File write failed.\n"); exit(-1); }
+  if (status < 0) {print_single("File write failed.\n"); exit(-1); }
   
   MPI_Barrier(MPI_COMM_WORLD);   
-  if ( rank == 0 ) printf("Saved File: %s\n", (output_dir + out_file_name.str()).c_str());
+  if ( rank == 0 ) print_single("Saved File: %s\n", (output_dir + out_file_name.str()).c_str());
   
   
   bool write_k_vals = true;
@@ -353,10 +353,10 @@ int main(int argc, char** argv) {
     
     // close the file
     status = H5Fclose(file_id);
-    if (status < 0) {printf("File write failed.\n"); exit(-1); }
+    if (status < 0) {print_single("File write failed.\n"); exit(-1); }
     
     MPI_Barrier(MPI_COMM_WORLD);   
-    if ( rank == 0 ) printf("Saved File: %s\n", (output_dir + out_file_name.str()).c_str());
+    if ( rank == 0 ) print_single("Saved File: %s\n", (output_dir + out_file_name.str()).c_str());
 
 
   }
@@ -377,7 +377,7 @@ int main(int argc, char** argv) {
   free( k_mag );
   
   MPI_Barrier(MPI_COMM_WORLD);
-  if ( rank == 0 ) printf("Finished Successfully\n" );
+  if ( rank == 0 ) print_single("Finished Successfully\n" );
   
   
   MPI_Finalize();
