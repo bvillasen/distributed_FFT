@@ -173,11 +173,10 @@ int main(int argc, char** argv) {
   //Allocate space for data
   Real *data_field = (Real *) malloc(nx_local*ny_local*nz_local*sizeof(Real)); 
   
-  ostringstream in_file_name;
+  ostringstream in_file_name, out_file_name;
   string field_name;
   Real field_mean_local, field_mean_global;
   Real *fft_amp2, *k_mag;
-  ostringstream out_file_name;
   hid_t   file_id; /* file identifier */
   herr_t  status;
   hsize_t   attr_dims;
@@ -189,9 +188,10 @@ int main(int argc, char** argv) {
   for ( int snapshot_index = 0; snapshot_index<2; snapshot_index++ ){
     
     time_stop = get_time();
-    
     n_snapshot = 0;
-    in_file_name = "";
+    
+    in_file_name.str("");
+    in_file_name.clear();
     // in_file_name << n_snapshot << "_particles.h5." << rank;
     in_file_name << n_snapshot << ".h5." << rank;
     field_name = "density";
