@@ -7,16 +7,21 @@
 #include <sstream>
 #include <stdlib.h>
 #include <math.h>
+#include <chrono> 
 #include "global.h"
 #include "io.h"
 #include "mpi_functions.h"
 
 
 
+using namespace std::chrono; 
 
 using namespace std;
 
 int main(int argc, char** argv) {
+  
+  // Start the timer 
+  auto start = high_resolution_clock::now(); 
   
   
   // Initialize MPI 
@@ -157,7 +162,7 @@ int main(int argc, char** argv) {
   Real *data_field = (Real *) malloc(nx_local*ny_local*nz_local*sizeof(Real)); 
   
   ostringstream in_file_name;
-  string field_name = "density";
+  string field_name;
   Real field_mean_local, field_mean_global;
   Real *fft_amp2, *k_mag;
   ostringstream out_file_name;
@@ -173,6 +178,7 @@ int main(int argc, char** argv) {
     n_snapshot = 1;
     // in_file_name << n_snapshot << "_particles.h5." << rank;
     in_file_name << n_snapshot << ".h5." << rank;
+    field_name = "density";
     if ( rank == 0 ) print_single("Loading File: %s\n",  (input_dir + in_file_name.str()).c_str() );
     Load_field_from_file( field_name, data_field, nx_local, ny_local, nz_local, in_file_name.str(), input_dir, rank, size   );
     
