@@ -207,37 +207,7 @@ int main(int argc, char** argv) {
     
     
     //Compute Wave Numbers kx, ky, kz
-    if (write_k_vals){
-      k_mag = (Real *) malloc(nx_local*ny_local*nz_local*sizeof(Real));
-      ptrdiff_t k_0, k_1, k_2;
-      Real k_x, k_y, k_z, k_magnitude, k_mag_min, k_mag_max;
-      int id;
-      k_mag_min = 1e100;
-      k_mag_max = -1e100;
-      for (int k=0; k<nz_local; k++ ){
-        for (int j=0; j<ny_local; j++ ){
-          for (int i=0; i<nx_local; i++ ){
-            id = i + j*nx_local + k*nx_local*ny_local;
-            
-            k_0 = k + local_input_start[0];
-            k_1 = j + local_input_start[1];
-            k_2 = i + local_input_start[2];
-      
-            if ( k_2 >= nx_total/2) k_2 -= nx_total;
-            if ( k_0 >= nz_total/2) k_0 -= nz_total;
-            if ( k_1 >= ny_total/2) k_1 -= ny_total;
-            
-            k_x = 2*M_PI*k_2/Lx;
-            k_z = 2*M_PI*k_0/Ly;
-            k_y = 2*M_PI*k_1/Lz;
-            k_magnitude = sqrt( k_x*k_x + k_y*k_y + k_z*k_z);
-            k_mag[id] = k_magnitude;
-            k_mag_max = fmax( k_mag_max, k_magnitude );
-            if (k_magnitude > 0 ) k_mag_min = fmin( k_mag_min, k_magnitude );
-          }
-        }
-      }
-    }
+  
     
     if ( compute_backward ){
       /* clear the old input */
@@ -307,69 +277,101 @@ int main(int argc, char** argv) {
     if ( rank == 0 ) print_single("Saved File: %s\n", (output_dir + out_file_name.str()).c_str());
     
     
-    if ( write_k_vals ){
-      //Save to hdf5 file  
-      ostringstream out_file_name;
-      out_file_name  << n_snapshot << "_k_magnitude" << ".h5." << rank;
-      hid_t   file_id; /* file identifier */
-      herr_t  status;
 
-      // Create a new file using default properties.
-      file_id = H5Fcreate( (output_dir + out_file_name.str()).c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT); 
-      
-      // Write Header  
-      hsize_t   attr_dims;
-      hid_t     attribute_id, dataspace_id;
-      int       int_data[3];
-      
-      
-      // 3D attributes
-      attr_dims = 3;
-      // Create the data space for the attribute
-      dataspace_id = H5Screate_simple(1, &attr_dims, NULL);
-      
-      int_data[0] = nx_total; int_data[1] = ny_total; int_data[2] = nz_total;
-      attribute_id = H5Acreate(file_id, "dims", H5T_STD_I32BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
-      status = H5Awrite(attribute_id, H5T_NATIVE_INT, int_data);
-      status = H5Aclose(attribute_id);
-      
-      int_data[0] = nx_local; int_data[1] = ny_local; int_data[2] = nz_local;
-      attribute_id = H5Acreate(file_id, "dims_local", H5T_STD_I32BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
-      status = H5Awrite(attribute_id, H5T_NATIVE_INT, int_data);
-      status = H5Aclose(attribute_id);
-      
-      int_data[0] = local_input_start[2]; int_data[1] = local_input_start[1]; int_data[2] = local_input_start[0];
-      attribute_id = H5Acreate(file_id, "offset", H5T_STD_I32BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
-      status = H5Awrite(attribute_id, H5T_NATIVE_INT, int_data);
-      status = H5Aclose(attribute_id);
-      
-      field_name = "k_mag";
-      Write_field_to_file( field_name, k_mag, nx_local, ny_local, nz_local, file_id  );
-      
-      // Single attributes first
-      attr_dims = 1;
-      dataspace_id = H5Screate_simple(1, &attr_dims, NULL);
-      attribute_id = H5Acreate(file_id, "k_mag_min", H5T_IEEE_F64BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
-      status = H5Awrite(attribute_id, H5T_NATIVE_DOUBLE, &k_mag_min);
-      status = H5Aclose(attribute_id);
-      
-      attribute_id = H5Acreate(file_id, "k_mag_max", H5T_IEEE_F64BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
-      status = H5Awrite(attribute_id, H5T_NATIVE_DOUBLE, &k_mag_max);
-      status = H5Aclose(attribute_id);
-      
-      // Close the dataspace
-      status = H5Sclose(dataspace_id);
-
-      
-      // close the file
-      status = H5Fclose(file_id);
-      if (status < 0) {print_single("File write failed.\n"); exit(-1); }
-      
-      MPI_Barrier(MPI_COMM_WORLD);   
-      if ( rank == 0 ) print_single("Saved File: %s\n", (output_dir + out_file_name.str()).c_str());
-
-
+  }
+  
+  if (write_k_vals){
+    Real  k_mag_min, k_mag_max;
+    k_mag = (Real *) malloc(nx_local*ny_local*nz_local*sizeof(Real));
+    ptrdiff_t k_0, k_1, k_2;
+    Real k_x, k_y, k_z, k_magnitude;
+    int id;
+    k_mag_min = 1e100;
+    k_mag_max = -1e100;
+    for (int k=0; k<nz_local; k++ ){
+      for (int j=0; j<ny_local; j++ ){
+        for (int i=0; i<nx_local; i++ ){
+          id = i + j*nx_local + k*nx_local*ny_local;
+          
+          k_0 = k + local_input_start[0];
+          k_1 = j + local_input_start[1];
+          k_2 = i + local_input_start[2];
+    
+          if ( k_2 >= nx_total/2) k_2 -= nx_total;
+          if ( k_0 >= nz_total/2) k_0 -= nz_total;
+          if ( k_1 >= ny_total/2) k_1 -= ny_total;
+          
+          k_x = 2*M_PI*k_2/Lx;
+          k_z = 2*M_PI*k_0/Ly;
+          k_y = 2*M_PI*k_1/Lz;
+          k_magnitude = sqrt( k_x*k_x + k_y*k_y + k_z*k_z);
+          k_mag[id] = k_magnitude;
+          k_mag_max = fmax( k_mag_max, k_magnitude );
+          if (k_magnitude > 0 ) k_mag_min = fmin( k_mag_min, k_magnitude );
+        }
+      }
     }
+    
+    //Save to hdf5 file  
+    ostringstream out_file_name;
+    out_file_name  << n_snapshot << "_k_magnitude" << ".h5." << rank;
+    hid_t   file_id; /* file identifier */
+    herr_t  status;
+
+    // Create a new file using default properties.
+    file_id = H5Fcreate( (output_dir + out_file_name.str()).c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT); 
+    
+    // Write Header  
+    hsize_t   attr_dims;
+    hid_t     attribute_id, dataspace_id;
+    int       int_data[3];
+    
+    
+    // 3D attributes
+    attr_dims = 3;
+    // Create the data space for the attribute
+    dataspace_id = H5Screate_simple(1, &attr_dims, NULL);
+    
+    int_data[0] = nx_total; int_data[1] = ny_total; int_data[2] = nz_total;
+    attribute_id = H5Acreate(file_id, "dims", H5T_STD_I32BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
+    status = H5Awrite(attribute_id, H5T_NATIVE_INT, int_data);
+    status = H5Aclose(attribute_id);
+    
+    int_data[0] = nx_local; int_data[1] = ny_local; int_data[2] = nz_local;
+    attribute_id = H5Acreate(file_id, "dims_local", H5T_STD_I32BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
+    status = H5Awrite(attribute_id, H5T_NATIVE_INT, int_data);
+    status = H5Aclose(attribute_id);
+    
+    int_data[0] = local_input_start[2]; int_data[1] = local_input_start[1]; int_data[2] = local_input_start[0];
+    attribute_id = H5Acreate(file_id, "offset", H5T_STD_I32BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
+    status = H5Awrite(attribute_id, H5T_NATIVE_INT, int_data);
+    status = H5Aclose(attribute_id);
+    
+    field_name = "k_mag";
+    Write_field_to_file( field_name, k_mag, nx_local, ny_local, nz_local, file_id  );
+    
+    // Single attributes first
+    attr_dims = 1;
+    dataspace_id = H5Screate_simple(1, &attr_dims, NULL);
+    attribute_id = H5Acreate(file_id, "k_mag_min", H5T_IEEE_F64BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
+    status = H5Awrite(attribute_id, H5T_NATIVE_DOUBLE, &k_mag_min);
+    status = H5Aclose(attribute_id);
+    
+    attribute_id = H5Acreate(file_id, "k_mag_max", H5T_IEEE_F64BE, dataspace_id, H5P_DEFAULT, H5P_DEFAULT); 
+    status = H5Awrite(attribute_id, H5T_NATIVE_DOUBLE, &k_mag_max);
+    status = H5Aclose(attribute_id);
+    
+    // Close the dataspace
+    status = H5Sclose(dataspace_id);
+
+    
+    // close the file
+    status = H5Fclose(file_id);
+    if (status < 0) {print_single("File write failed.\n"); exit(-1); }
+    
+    MPI_Barrier(MPI_COMM_WORLD);   
+    if ( rank == 0 ) print_single("Saved File: %s\n", (output_dir + out_file_name.str()).c_str());
+
 
   }
   
