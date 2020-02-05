@@ -17,10 +17,17 @@
 
 using namespace std;
 
+double get_time(void)
+{ 
+  struct timeval timer;
+  gettimeofday(&timer,NULL);
+  return timer.tv_sec + 1.0e-6*timer.tv_usec;
+}
+
 int main(int argc, char** argv) {
   
   // Start the timer 
-  Real time_start, time_stop;
+  double time_start, time_stop;
   time_start = get_time();
   
   
