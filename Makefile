@@ -64,7 +64,7 @@ LIBS += $(FFTW_LIBS) $(PFFT_LIBS)
 
 FLAGS = $(PRECISION)
 CFLAGS = $(FLAGS)
-CXXFLAGS = $(FLAGS) -Wc++11-extensions
+CXXFLAGS = $(FLAGS) 
 
 
 
