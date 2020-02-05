@@ -166,8 +166,8 @@ int main(int argc, char** argv) {
   
   
   time_stop = get_time();
-  time = (time_stop - time_start)*1000;
-  if (rank == 0 ) print_single( "Elapsed Time: %f\n", time );
+  time = (time_stop - time_start);
+  if (rank == 0 ) print_single( "Elapsed Time: %f   secs\n", time );
   
   
   //Allocate space for data
@@ -191,6 +191,7 @@ int main(int argc, char** argv) {
     time_stop = get_time();
     
     n_snapshot = 0;
+    in_file_name = "";
     // in_file_name << n_snapshot << "_particles.h5." << rank;
     in_file_name << n_snapshot << ".h5." << rank;
     field_name = "density";
@@ -299,8 +300,8 @@ int main(int argc, char** argv) {
     
     
     time_stop = get_time();
-    time = (time_stop - time_start)*1000;
-    if (rank == 0 ) print_single( "Elapsed Time: %f\n", time );
+    time = (time_stop - time_start);
+    if (rank == 0 ) print_single( "Elapsed Time: %f   secs\n", time );
 
   }
   
