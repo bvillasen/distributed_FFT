@@ -7,21 +7,21 @@
 #include <sstream>
 #include <stdlib.h>
 #include <math.h>
-#include <chrono> 
+#include <ctime> 
 #include "global.h"
 #include "io.h"
 #include "mpi_functions.h"
 
 
 
-using namespace std::chrono; 
 
 using namespace std;
 
 int main(int argc, char** argv) {
   
   // Start the timer 
-  auto start = high_resolution_clock::now(); 
+  Real time_start, time_stop;
+  time_start = get_time();
   
   
   // Initialize MPI 
