@@ -183,8 +183,9 @@ int main(int argc, char** argv) {
   hid_t     attribute_id, dataspace_id;
   int       int_data[3];
   
-  int n_snapshots = 10;
-  int snapshots_indices[] = { 0, 15, 22, 46, 63, 90, 106, 130, 117, 169 };
+  int n_snapshots = 1;
+  // int snapshots_indices[] = { 0, 15, 22, 46, 63, 90, 106, 130, 117, 169 };
+  int snapshots_indices[] = { 147 };
   
   int n_snapshot;
   for ( int snapshot_index = 0; snapshot_index<n_snapshots; snapshot_index++ ){
