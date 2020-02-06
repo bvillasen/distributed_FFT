@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
   // output_dir = data_dir + "cosmo_sims/256_dm_50Mpc/output_files/data_fft/";
   data_dir = "/gpfs/alpine/proj-shared/ast149/";
   input_dir  = data_dir + "cosmo_sims/2048_hydro_50Mpc/output_files_hm12/";
-  output_dir = data_dir + "cosmo_sims/2048_hydro_50Mpc/power_spectrum_hm12/gas/data_fft/";;
+  output_dir = data_dir + "cosmo_sims/2048_hydro_50Mpc/power_spectrum_hm12/dm/data_fft/";;
   
   // input_dir = "/home/brvillas/cosmo_sims/2048_hydro_50Mpc/output_files_hm12/";
   // output_dir = "/home/brvillas/cosmo_sims/2048_hydro_50Mpc/power_spectrum_hm12/data_fft/";
@@ -183,9 +183,9 @@ int main(int argc, char** argv) {
   hid_t     attribute_id, dataspace_id;
   int       int_data[3];
   
-  int n_snapshots = 1;
-  // int snapshots_indices[] = { 0, 15, 22, 46, 63, 90, 106, 130, 117, 169 };
-  int snapshots_indices[] = { 147 };
+  int n_snapshots = 11;
+  int snapshots_indices[] = { 0, 15, 22, 46, 63, 90, 106, 117, 130, 147,  169 };
+  // int snapshots_indices[] = { 147 };
   
   int n_snapshot;
   for ( int snapshot_index = 0; snapshot_index<n_snapshots; snapshot_index++ ){
@@ -195,8 +195,8 @@ int main(int argc, char** argv) {
     
     in_file_name.str("");
     in_file_name.clear();
-    // in_file_name << n_snapshot << "_particles.h5." << rank;
-    in_file_name << n_snapshot << ".h5." << rank;
+    in_file_name << n_snapshot << "_particles.h5." << rank;
+    // in_file_name << n_snapshot << ".h5." << rank;
     field_name = "density";
     if ( rank == 0 ) print_single("Loading File: %s\n",  (input_dir + in_file_name.str()).c_str() );
     Load_field_from_file( field_name, data_field, nx_local, ny_local, nz_local, in_file_name.str(), input_dir, rank, size   );
