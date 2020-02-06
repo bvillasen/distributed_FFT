@@ -53,8 +53,8 @@ int main(int argc, char** argv) {
   // input_dir  = data_dir + "cosmo_sims/256_dm_50Mpc/output_files/";
   // output_dir = data_dir + "cosmo_sims/256_dm_50Mpc/output_files/data_fft/";
   data_dir = "/gpfs/alpine/proj-shared/ast149/";
-  input_dir  = data_dir + "cosmo_sims/2048_hydro_50Mpc/output_files_hm12/";
-  output_dir = data_dir + "cosmo_sims/2048_hydro_50Mpc/power_spectrum_hm12/dm/data_fft/";;
+  input_dir  = data_dir + "cosmo_sims/2048_hydro_50Mpc/output_files_pchw18/";
+  output_dir = data_dir + "cosmo_sims/2048_hydro_50Mpc/power_spectrum_pchw18/dm/data_fft/";;
   
   // input_dir = "/home/brvillas/cosmo_sims/2048_hydro_50Mpc/output_files_hm12/";
   // output_dir = "/home/brvillas/cosmo_sims/2048_hydro_50Mpc/power_spectrum_hm12/data_fft/";
@@ -183,6 +183,8 @@ int main(int argc, char** argv) {
   hid_t     attribute_id, dataspace_id;
   int       int_data[3];
   
+  fft_amp2 = (Real *) malloc(nx_local*ny_local*nz_local*sizeof(Real)); 
+  
   int n_snapshots = 11;
   int snapshots_indices[] = { 0, 15, 22, 46, 63, 90, 106, 117, 130, 147,  169 };
   // int snapshots_indices[] = { 147 };
@@ -227,7 +229,6 @@ int main(int argc, char** argv) {
     pfft_execute(plan_forw);
     
     // Compute the amplitude of the FFT
-    fft_amp2 = (Real *) malloc(nx_local*ny_local*nz_local*sizeof(Real)); 
     for ( int i=0; i<n_cells_local; i++ ) fft_amp2[i] = out[i][0]*out[i][0] + out[i][1]*out[i][1];
     
     
