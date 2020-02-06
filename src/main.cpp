@@ -254,6 +254,8 @@ int main(int argc, char** argv) {
     }
     
     //Save to hdf5 file  
+    out_file_name.str("");
+    out_file_name.clear();
     out_file_name  << n_snapshot << "_data_fft" << ".h5." << rank;
 
     // Create a new file using default properties.
