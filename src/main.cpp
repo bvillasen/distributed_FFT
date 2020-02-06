@@ -189,7 +189,7 @@ int main(int argc, char** argv) {
   
   int n_snapshot;
   for ( int snapshot_index = 0; snapshot_index<n_snapshots; snapshot_index++ ){
-    time_stop = get_time();
+    time_start = get_time();
     
     n_snapshot = snapshots_indices[snapshot_index];
     
