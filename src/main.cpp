@@ -183,12 +183,14 @@ int main(int argc, char** argv) {
   hid_t     attribute_id, dataspace_id;
   int       int_data[3];
   
+  int n_snapshots = 10;
+  int snapshots_indices[n_snapshots] = { 0, 15, 22, 46, 63, 90, 106, 130, 117, 169 };
   
   int n_snapshot;
-  for ( int snapshot_index = 0; snapshot_index<2; snapshot_index++ ){
-    
+  for ( int snapshot_index = 0; snapshot_index<n_snapshots; snapshot_index++ ){
     time_stop = get_time();
-    n_snapshot = 0;
+    
+    n_snapshot = snapshots_indices[snapshot_index];
     
     in_file_name.str("");
     in_file_name.clear();
